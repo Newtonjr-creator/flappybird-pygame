@@ -46,10 +46,10 @@ jobs:
         export PATH=$ANDROID_HOME/bin:$PATH
         cd $ANDROID_HOME/bin
         yes | ./sdkmanager --sdk_root=$ANDROID_HOME/../.. --licenses
-        ./sdkmanager --sdk_root=$ANDROID_HOME/../.. 'build-tools;31.0.0'
+        ./sdkmanager --sdk_root=$ANDROID_HOME/../.. 'build-tools;30.0.3' # Install version that includes AIDL
         ./sdkmanager --sdk_root=$ANDROID_HOME/../.. 'platform-tools'
         ./sdkmanager --sdk_root=$ANDROID_HOME/../.. 'platforms;android-31'
-        ./sdkmanager --sdk_root=$ANDROID_HOME/../.. 'build-tools;30.0.3' # Add this line to ensure the required build tools version is installed
+        ./sdkmanager --sdk_root=$ANDROID_HOME/../.. 'tools'  # Ensure Android SDK tools are installed as well
 
     - name: Build APK
       run: |

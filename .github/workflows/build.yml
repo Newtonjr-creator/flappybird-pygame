@@ -43,12 +43,17 @@ jobs:
       unzip commandlinetools-linux-11076708_latest.zip
       export ANDROID_HOME=$PWD
       export PATH=$ANDROID_HOME/tools/bin:$PATH
-      export PATH=$ANDROID_HOME/platform-tools:
-      $PATH
-       yes | sdkmanager-licences
-       sdkmanager 'build-tools;31.0.0'
-       sdkmanager 'platform-tools'
-       sdkmanager 'platforms;android-31'
+      export PATH=$ANDROID_HOME/platform-tools:$PATH
+      cd $ANDROID_HOME
+      mkdir -p Android/Sdk
+      cd Android/Sdk
+      ln -s ../../../platform-tools
+      ln -s ../../../tools
+      yes | sdkmanager --licenses
+      sdkmanager 'build-tools;31.0.0'
+      sdkmanager 'platform-tools'
+      sdkmanager 'platforms;android-31'
+
     
   - name: Build APK
     run: |
@@ -56,7 +61,7 @@ jobs:
       mkdir -p $GITHUB_WORKSPACE/apk
       cp bin/*.apk $GITHUB_WORKSPACE/apk
 
-  - name: Upload APK
+  - name: Upload APK  
     uses: actions/upload-artifact@v3
     with:
       name: FlappyBird-APK

@@ -1,64 +1,64 @@
 name: Build Flappy Bird APK
 
 on:
- push:
-  branches:
-  - main
-  
+  push:
+    branches:
+      - main
+
 jobs:
- build:
-  runs-on: ubuntu-latest
-  steps:
-  - name: Checkout code
-    uses: actions/checkout@v3
+  build:
+    runs-on: ubuntu-latest
 
-  - name: Set up Python
-    uses: actions/setup-python@v4
-    with:
-     python-version: '3.10'
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v3
 
-  - name: Install dependencies
-    run: |
-      sudo apt update
-      sudo apt install -y \
-        python3-pip \
-        openjdk-17-jdk \
-        python3-setuptools \
-        python3-wheel \
-        git \
-        unzip
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.10'
 
-      pip install --upgrade pip
-      pip install cython
-      pip install buildozer
-      pip install pygame
-      pip install pandas
-      pip install numpy
-      pip install scipy
-      pip install pillow
+    - name: Install dependencies
+      run: |
+        sudo apt update
+        sudo apt install -y \
+          python3-pip \
+          openjdk-17-jdk \
+          python3-setuptools \
+          python3-wheel \
+          git \
+          unzip
 
-  - name: Download Android command-line tools
-    run: |
-      wget https://dl.google.com/android/repository/commandlinetools-linux-11076708_latest.zip
-      unzip commandlinetools-linux-11076708_latest.zip
-      export ANDROID_HOME=$PWD/cmdline-tools
-      export PATH=$ANDROID_HOME/bin:$PATH
-      cd $ANDROID_HOME/bin
-      yes | ./sdkmanager --sdk_root=$ANDROID_HOME/../.. --licenses
-      ./sdkmanager --sdk_root=$ANDROID_HOME/../.. 'build-tools;31.0.0'
-      ./sdkmanager --sdk_root=$ANDROID_HOME/../.. 'platform-tools'
-      ./sdkmanager --sdk_root=$ANDROID_HOME/../.. 'platforms;android-31'
-      
-    
-    
-  - name: Build APK
-    run: |
-      buildozer android debug
-      mkdir -p $GITHUB_WORKSPACE/apk
-      cp bin/*.apk $GITHUB_WORKSPACE/apk
+        pip install --upgrade pip
+        pip install cython
+        pip install buildozer
+        pip install pygame
+        pip install pandas
+        pip install numpy
+        pip install scipy
+        pip install pillow
 
-  - name: Upload APK  
-    uses: actions/upload-artifact@v3
-    with:
-     name: FlappyBird-APK
-     path: apk/
+    - name: Download Android command-line tools
+      run: |
+        wget https://dl.google.com/android/repository/commandlinetools-linux-11076708_latest.zip
+        unzip commandlinetools-linux-11076708_latest.zip
+        export ANDROID_HOME=$PWD/cmdline-tools
+        export PATH=$ANDROID_HOME/bin:$PATH
+        cd $ANDROID_HOME/bin
+        yes | ./sdkmanager --sdk_root=$ANDROID_HOME/../.. --licenses
+        ./sdkmanager --sdk_root=$ANDROID_HOME/../.. 'build-tools;31.0.0'
+        ./sdkmanager --sdk_root=$ANDROID_HOME/../.. 'platform-tools'
+        ./sdkmanager --sdk_root=$ANDROID_HOME/../.. 'platforms;android-31'
+        ./sdkmanager --sdk_root=$ANDROID_HOME/../.. 'build-tools;30.0.3' # Add this line to ensure the required build tools version is installed
+
+    - name: Build APK
+      run: |
+        buildozer android debug
+        mkdir -p $GITHUB_WORKSPACE/apk
+        cp bin/*.apk $GITHUB_WORKSPACE/apk
+
+    - name: Upload APK  
+      uses: actions/upload-artifact@v3
+      with:
+        name: FlappyBird-APK
+        path: apk/

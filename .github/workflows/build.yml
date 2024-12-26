@@ -1,58 +1,58 @@
 name: Build Flappy Bird APK
 
 on:
-  push:
-    branches:
-      - main
-
+ push:
+  branches:
+  - main
+  
 jobs:
-  build:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v3
+ build:
+  runs-on: ubuntu-latest
+  steps:
+  - name: Checkout code
+    uses: actions/checkout@v3
 
-      - name: Set up Python
-        uses: actions/setup-python@v4
-        with:
-          python-version: '3.10'
+  - name: Set up Python
+    uses: actions/setup-python@v4
+    with:
+     python-version: '3.10'
 
-      - name: Install dependencies
-        run: |
-          sudo apt update
-          sudo apt install -y \
-            python3-pip \
-            openjdk-17-jdk \
-            python3-setuptools \
-            python3-wheel \
-            git \
-            unzip
+  - name: Install dependencies
+    run: |
+      sudo apt update
+      sudo apt install -y \
+        python3-pip \
+        openjdk-17-jdk \
+        python3-setuptools \
+        python3-wheel \
+        git \
+        unzip
 
-          pip install --upgrade pip
-          pip install cython
-          pip install buildozer
-          pip install pygame
-          pip install pandas
-          pip install numpy
-          pip install scipy
-          pip install pillow
+      pip install --upgrade pip
+      pip install cython
+      pip install buildozer
+      pip install pygame
+      pip install pandas
+      pip install numpy
+      pip install scipy
+      pip install pillow
 
-      - name: Download Android NDK
-        run: |
-          wget (link unavailable)
-          unzip android-ndk-r23b-linux.zip
-          export ANDROID_NDK_HOME=$PWD/android-ndk-r23b
-          export PATH=$ANDROID_NDK_HOME:$PATH
+  - name: Download Android command-line tools
+    run: |
+      wget commandlinetools-linux-11076708_latest.zip
+      unzip commandlinetools-linux-11076708_latest.zip
+      export ANDROID_HOME=$PWD
+      export PATH=$ANDROID_HOME/tools/bin:$PATH
 
-      - name: Build APK
-        run: |
-          buildozer init
-          buildozer android debug
-          mkdir -p $GITHUB_WORKSPACE/apk
-          cp bin/*.apk $GITHUB_WORKSPACE/apk
+  - name: Build APK
+    run: |
+      buildozer init
+      buildozer android debug
+      mkdir -p $GITHUB_WORKSPACE/apk
+      cp bin/*.apk $GITHUB_WORKSPACE/apk
 
-      - name: Upload APK
-        uses: actions/upload-artifact@v3
-        with:
-          name: FlappyBird-APK
-          path: apk/
+  - name: Upload APK
+    uses: actions/upload-artifact@v3
+    with:
+      name: FlappyBird-APK
+      path: apk/

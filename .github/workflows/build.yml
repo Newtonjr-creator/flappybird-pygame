@@ -39,7 +39,7 @@ jobs:
 
   - name: Download Android command-line tools
     run: |
-      wget commandlinetools-linux-11076708_latest.zip
+      wget http://commandlinetools-linux-11076708_latest.zip/      
       unzip commandlinetools-linux-11076708_latest.zip
       export ANDROID_HOME=$PWD
       export PATH=$ANDROID_HOME/tools/bin:$PATH

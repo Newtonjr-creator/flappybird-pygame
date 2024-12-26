@@ -26,12 +26,7 @@ jobs:
             python3-setuptools \
             python3-wheel \
             git \
-            unzip \
-            android-sdk \
-            android-ndk \
-            gradle \
-            maven \
-            android-studio
+            unzip
 
           pip install --upgrade pip
           pip install cython
@@ -42,12 +37,12 @@ jobs:
           pip install scipy
           pip install pillow
 
-      - name: Set up Android SDK
+      - name: Download Android NDK
         run: |
-          echo "sdkman_auto_answer=true" >> ~/.sdkman/etc/config
-          sdkman install java 17.0.2-open
-          sdkman install android-sdk 4333796
-          sdkman install android-ndk 23.1.7779620
+          wget (link unavailable)
+          unzip android-ndk-r23b-linux.zip
+          export ANDROID_NDK_HOME=$PWD/android-ndk-r23b
+          export PATH=$ANDROID_NDK_HOME:$PATH
 
       - name: Build APK
         run: |

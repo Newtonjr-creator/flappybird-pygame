@@ -42,14 +42,14 @@ jobs:
       wget https://dl.google.com/android/repository/commandlinetools-linux-11076708_latest.zip      
       unzip commandlinetools-linux-11076708_latest.zip
       export ANDROID_HOME=$PWD
-      export PATH=$ANDROID_HOME/tools/bin:$PATH
-      cd $ANDROID_HOME/tools/bin
+      export PATH=$ANDROID_HOME/cmdline-tools/bin:$PATH
+      cd $ANDROID_HOME/cmdline-tools/bin
       yes | ./sdkmanager --licenses
       ./sdkmanager 'build-tools;31.0.0'
       ./sdkmanager 'platform-tools'
       ./sdkmanager 'platforms;android-31'
       
-      
+     
     
   - name: Build APK
     run: |

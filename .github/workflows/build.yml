@@ -46,7 +46,6 @@ jobs:
 
   - name: Build APK
     run: |
-      buildozer init
       buildozer android debug
       mkdir -p $GITHUB_WORKSPACE/apk
       cp bin/*.apk $GITHUB_WORKSPACE/apk

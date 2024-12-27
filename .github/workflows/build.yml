@@ -1,44 +1,76 @@
+name: Build APK for flappybird 
+
 on:
   push:
-    branches: [ main ]
-  pull_request:
-    branches: [ main ]
-  schedule:
-    - cron: '0 0 1,15 * *'
+    branches:
+      - main
 
 jobs:
   build:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v2
+    - name: Checkout the code
+      uses: actions/checkout@v2
 
-      - name: Get Date
-        id: get-date
-        run: |
-          echo "::set-output name=date::$(/bin/date -u "+%Y%m%d")"
-        shell: bash
-
-      - name: Cache Buildozer global directory
-        uses: actions/cache@v2
-        with:
-          path: .buildozer_global
-          key: buildozer-global-${{ hashFiles('buildozer.spec') }}
-
-      - uses: actions/cache@v2
-        with:
-          path: .buildozer
-          key: ${{ runner.os }}-${{ steps.get-date.outputs.date }}-${{ hashFiles('buildozer.spec') }}
-
-      - name: Build with Buildozer
-        uses: ArtemSBulgakov/buildozer-action@v1
-        id: buildozer
-        with:
-          command: echo y | buildozer -v android debug
-          buildozer_version: master
-
-      - name: Upload artifacts
-        uses: actions/upload-artifact@v2
-        with:
-          name: package
-          path: ${{ steps.buildozer.outputs.filename }}
+    # Download Android SDK Command Line Tools
+    - name: Download Android SDK Command Line Tools
+      run: |
+        # Create the SDK folder structure
+        mkdir -p /home/runner/android-sdk/cmdline-tools
+        
+        # Download the Android command line tools zip
+        wget https://dl.google.com/android/repository/commandlinetools-linux-9477386_latest.zip -O commandlinetools.zip
+        
+        # Unzip the command line tools into the sdk directory
+        unzip -o commandlinetools.zip -d /home/runner/android-sdk/cmdline-tools
+        
+        # Remove the zip file after extraction
+        rm commandlinetools.zip
+        
+        # Move the extracted tools to the 'latest' directory
+        mkdir -p /home/runner/android-sdk/cmdline-tools/latest
+        mv /home/runner/android-sdk/cmdline-tools/cmdline-tools/* /home/runner/android-sdk/cmdline-tools/latest
+        
+        # Create the missing 'bin' directory to ensure the symbolic link can be created
+        mkdir -p /home/runner/android-sdk/tools/bin
+        
+        # Create a symbolic link to the sdkmanager binary in the expected location
+        ln -sf /home/runner/android-sdk/cmdline-tools/latest/bin/sdkmanager /home/runner/android-sdk/tools/bin/sdkmanager
+        
+        # Display the sdkmanager path
+        echo "sdkmanager path: /home/runner/android-sdk/tools/bin/sdkmanager"
+    # Accept Android SDK Licenses
+    - name: Accept Android SDK Licenses
+      run: |
+        # Accept all licenses for Android SDK
+        yes | /home/runner/android-sdk/cmdline-tools/latest/bin/sdkmanager --licenses
+    # Install SDK components (required for build)
+    - name: Install SDK Components
+      run: |
+        /home/runner/android-sdk/cmdline-tools/latest/bin/sdkmanager "platform-tools" "platforms;android-33" "build-tools;33.0.2"
+    # Set up environment variables for Buildozer
+    - name: Set up environment variables
+      run: |
+        echo "ANDROID_HOME=/home/runner/android-sdk" >> $GITHUB_ENV
+        echo "ANDROID_SDK_ROOT=/home/runner/android-sdk" >> $GITHUB_ENV
+    # Install dependencies and build the APK with Buildozer
+    - name: Install dependencies and build APK
+      run: |
+        # Install buildozer
+        pip install buildozer
+        
+        # Set up buildozer.spec if needed (you may already have this configured in your repository)
+        echo "[buildozer]" > buildozer.spec
+        echo "android.sdk_path = /home/runner/android-sdk" >> buildozer.spec
+        echo "android.sdk = 33" >> buildozer.spec
+        echo "android.sdk_build_tools = 33.0.2" >> buildozer.spec
+        
+        # Run the build process
+        buildozer -v android debug
+    # Upload the APK to GitHub Releases (Optional)
+    - name: Upload APK to GitHub Releases
+      if: success()
+      uses: ncipollo/release-action@v1
+      with:
+        artifacts: 'bin/*.apk'

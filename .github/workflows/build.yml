@@ -1,4 +1,6 @@
-name: Build APK for flappybird 
+
+
+name: Build APK for flappybird
 
 on:
   push:
@@ -40,34 +42,33 @@ jobs:
         
         # Display the sdkmanager path
         echo "sdkmanager path: /home/runner/android-sdk/tools/bin/sdkmanager"
+        
     # Accept Android SDK Licenses
     - name: Accept Android SDK Licenses
       run: |
         # Accept all licenses for Android SDK
         yes | /home/runner/android-sdk/cmdline-tools/latest/bin/sdkmanager --licenses
+        
     # Install SDK components (required for build)
     - name: Install SDK Components
       run: |
         /home/runner/android-sdk/cmdline-tools/latest/bin/sdkmanager "platform-tools" "platforms;android-33" "build-tools;33.0.2"
+        
     # Set up environment variables for Buildozer
     - name: Set up environment variables
       run: |
         echo "ANDROID_HOME=/home/runner/android-sdk" >> $GITHUB_ENV
         echo "ANDROID_SDK_ROOT=/home/runner/android-sdk" >> $GITHUB_ENV
+        
     # Install dependencies and build the APK with Buildozer
     - name: Install dependencies and build APK
       run: |
         # Install buildozer
         pip install buildozer
         
-        # Set up buildozer.spec if needed (you may already have this configured in your repository)
-        echo "[buildozer]" > buildozer.spec
-        echo "android.sdk_path = /home/runner/android-sdk" >> buildozer.spec
-        echo "android.sdk = 33" >> buildozer.spec
-        echo "android.sdk_build_tools = 33.0.2" >> buildozer.spec
-        
         # Run the build process
         buildozer -v android debug
+        
     # Upload the APK to GitHub Releases (Optional)
     - name: Upload APK to GitHub Releases
       if: success()

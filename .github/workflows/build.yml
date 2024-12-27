@@ -31,15 +31,16 @@ jobs:
           pip install --upgrade pip
           pip install cython buildozer pygame pandas numpy scipy pillow
 
-      - name: Download Android Command-Line Tools
+      - name: Download and Set Up Android Command-Line Tools
         run: |
-          mkdir -p $HOME/android-sdk/cmdline-tools/latest
-          wget https://dl.google.com/android/repository/commandlinetools-linux-11076708_latest.zip
-          unzip -o commandlinetools-linux-11076708_latest.zip -d $HOME/android-sdk/cmdline-tools/latest
+          mkdir -p $HOME/android-sdk/cmdline-tools
+          wget https://dl.google.com/android/repository/commandlinetools-linux-11076708_latest.zip -O cmdline-tools.zip
+          unzip -o cmdline-tools.zip -d $HOME/android-sdk/cmdline-tools
+          mv $HOME/android-sdk/cmdline-tools/cmdline-tools $HOME/android-sdk/cmdline-tools/latest
           export ANDROID_SDK_ROOT=$HOME/android-sdk
           export PATH=$ANDROID_SDK_ROOT/cmdline-tools/latest/bin:$ANDROID_SDK_ROOT/platform-tools:$PATH
-          yes | sdkmanager --licenses
-          sdkmanager "platform-tools" "platforms;android-31" "build-tools;31.0.0"
+          yes | $ANDROID_SDK_ROOT/cmdline-tools/latest/bin/sdkmanager --licenses
+          $ANDROID_SDK_ROOT/cmdline-tools/latest/bin/sdkmanager "platform-tools" "platforms;android-31" "build-tools;31.0.0"
 
       - name: Build APK
         run: |

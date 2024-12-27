@@ -53,6 +53,15 @@ jobs:
             "build-tools;31.0.0" \
             "cmdline-tools;latest"
 
+      - name: Ensure Build Tools Are Found
+        run: |
+          # Verify if build-tools directory exists
+          if [ ! -d "$ANDROID_SDK_ROOT/build-tools/31.0.0" ]; then
+            echo "Build-tools not found. Exiting."
+            exit 1
+          fi
+          ls -al $ANDROID_SDK_ROOT/build-tools/
+
       - name: Build APK
         run: |
           # Set Android SDK environment variables

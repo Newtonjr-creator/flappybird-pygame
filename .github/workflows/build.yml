@@ -21,57 +21,28 @@ jobs:
       - name: Install dependencies
         run: |
           sudo apt update
-          sudo apt install -y \
-            python3-pip \
-            openjdk-17-jdk \
-            python3-setuptools \
-            python3-wheel \
-            git \
-            unzip
-
-          # Install Python packages
+          sudo apt install -y python3-pip openjdk-17-jdk python3-setuptools python3-wheel git unzip
           pip install --upgrade pip
-          pip install cython buildozer pygame pandas numpy scipy pillow
+          pip install buildozer
+          pip install cython
 
-      - name: Download and Set Up Android SDK
+      - name: Download Android SDK
         run: |
-          # Create Android SDK folder and download command-line tools
           mkdir -p $HOME/android-sdk/cmdline-tools
-          wget https://dl.google.com/android/repository/commandlinetools-linux-11076708_latest.zip -O cmdline-tools.zip
-          unzip -o cmdline-tools.zip -d $HOME/android-sdk/cmdline-tools
-          mv $HOME/android-sdk/cmdline-tools/cmdline-tools $HOME/android-sdk/cmdline-tools/latest
-
-          # Set environment variables
+          cd $HOME/android-sdk/cmdline-tools
+          wget https://dl.google.com/android/repository/commandlinetools-linux-11076708_latest.zip -O commandlinetools.zip
+          unzip commandlinetools.zip
+          rm commandlinetools.zip
+          mv cmdline-tools latest
           export ANDROID_SDK_ROOT=$HOME/android-sdk
-          export PATH=$ANDROID_SDK_ROOT/cmdline-tools/latest/bin:$ANDROID_SDK_ROOT/platform-tools:$PATH
-
-          # Accept licenses and install required SDK components
+          export PATH=$ANDROID_SDK_ROOT/cmdline-tools/latest/bin:$PATH
+          sdkmanager --sdk_root=$ANDROID_SDK_ROOT "platform-tools" "platforms;android-31" "build-tools;31.0.0"
           yes | sdkmanager --licenses
-          sdkmanager \
-            "platform-tools" \
-            "platforms;android-31" \
-            "build-tools;31.0.0" \
-            "cmdline-tools;latest"
-
-      - name: Ensure Build Tools Are Found
-        run: |
-          # Verify if build-tools directory exists
-          if [ ! -d "$ANDROID_SDK_ROOT/build-tools/31.0.0" ]; then
-            echo "Build-tools not found. Exiting."
-            exit 1
-          fi
-          ls -al $ANDROID_SDK_ROOT/build-tools/
 
       - name: Build APK
         run: |
-          # Set Android SDK environment variables
-          export ANDROID_SDK_ROOT=$HOME/android-sdk
-          export PATH=$ANDROID_SDK_ROOT/cmdline-tools/latest/bin:$ANDROID_SDK_ROOT/platform-tools:$PATH
-
-          # Build APK
+          cd $GITHUB_WORKSPACE
           buildozer android debug
-
-          # Move the APK to the GitHub workspace
           mkdir -p $GITHUB_WORKSPACE/apk
           cp bin/*.apk $GITHUB_WORKSPACE/apk
 

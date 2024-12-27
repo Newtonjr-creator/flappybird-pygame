@@ -42,6 +42,11 @@ jobs:
       run: |
         /home/runner/android-sdk/cmdline-tools/latest/bin/sdkmanager "platform-tools" "platforms;android-33" "build-tools;33.0.2"
 
+    # Install python-for-android (p4a)
+    - name: Install python-for-android (p4a)
+      run: |
+        pip install python-for-android
+
     # Install NDK (Optional)
     - name: Install NDK
       run: |
@@ -53,7 +58,7 @@ jobs:
         echo "ANDROID_HOME=/home/runner/android-sdk" >> $GITHUB_ENV
         echo "ANDROID_SDK_ROOT=/home/runner/android-sdk" >> $GITHUB_ENV
 
-    # Install Buildozer and clean build
+    # Install Buildozer and Clean Build
     - name: Install Buildozer and Clean Build
       run: |
         pip install buildozer

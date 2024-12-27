@@ -8,6 +8,7 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
+
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
@@ -28,35 +29,44 @@ jobs:
             git \
             unzip
 
+          # Install Python packages
           pip install --upgrade pip
           pip install cython buildozer pygame pandas numpy scipy pillow
 
-      - name: Download and Set Up Android Command-Line Tools
+      - name: Download and Set Up Android SDK
         run: |
+          # Create Android SDK folder and download command-line tools
           mkdir -p $HOME/android-sdk/cmdline-tools
           wget https://dl.google.com/android/repository/commandlinetools-linux-11076708_latest.zip -O cmdline-tools.zip
           unzip -o cmdline-tools.zip -d $HOME/android-sdk/cmdline-tools
           mv $HOME/android-sdk/cmdline-tools/cmdline-tools $HOME/android-sdk/cmdline-tools/latest
+
+          # Set environment variables
           export ANDROID_SDK_ROOT=$HOME/android-sdk
           export PATH=$ANDROID_SDK_ROOT/cmdline-tools/latest/bin:$ANDROID_SDK_ROOT/platform-tools:$PATH
-          yes | $ANDROID_SDK_ROOT/cmdline-tools/latest/bin/sdkmanager --licenses
-          $ANDROID_SDK_ROOT/cmdline-tools/latest/bin/sdkmanager \
+
+          # Accept licenses and install required SDK components
+          yes | sdkmanager --licenses
+          sdkmanager \
             "platform-tools" \
             "platforms;android-31" \
             "build-tools;31.0.0" \
-            "system-images;android-31;default;x86_64" \
-            "cmdline-tools;latest" \
-            "emulator"
+            "cmdline-tools;latest"
 
       - name: Build APK
         run: |
+          # Set Android SDK environment variables
           export ANDROID_SDK_ROOT=$HOME/android-sdk
           export PATH=$ANDROID_SDK_ROOT/cmdline-tools/latest/bin:$ANDROID_SDK_ROOT/platform-tools:$PATH
+
+          # Build APK
           buildozer android debug
+
+          # Move the APK to the GitHub workspace
           mkdir -p $GITHUB_WORKSPACE/apk
           cp bin/*.apk $GITHUB_WORKSPACE/apk
 
-      - name: Upload APK  
+      - name: Upload APK
         uses: actions/upload-artifact@v3
         with:
           name: FlappyBird-APK

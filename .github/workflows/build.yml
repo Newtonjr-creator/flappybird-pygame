@@ -8,58 +8,49 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
-
     steps:
-    - name: Checkout code
-      uses: actions/checkout@v3
+      - name: Checkout code
+        uses: actions/checkout@v3
 
-    - name: Set up Python
-      uses: actions/setup-python@v4
-      with:
-        python-version: '3.10'
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.10'
 
-    - name: Install dependencies
-      run: |
-        sudo apt update
-        sudo apt install -y \
-          python3-pip \
-          openjdk-17-jdk \
-          python3-setuptools \
-          python3-wheel \
-          git \
-          unzip
+      - name: Install dependencies
+        run: |
+          sudo apt update
+          sudo apt install -y \
+            python3-pip \
+            openjdk-17-jdk \
+            python3-setuptools \
+            python3-wheel \
+            git \
+            unzip
 
-        pip install --upgrade pip
-        pip install cython
-        pip install buildozer
-        pip install pygame
-        pip install pandas
-        pip install numpy
-        pip install scipy
-        pip install pillow
+          pip install --upgrade pip
+          pip install cython buildozer pygame pandas numpy scipy pillow
 
-    - name: Download Android command-line tools
-      run: |
-        wget https://dl.google.com/android/repository/commandlinetools-linux-11076708_latest.zip
-        unzip commandlinetools-linux-11076708_latest.zip -d android-sdk
-        export ANDROID_HOME=$PWD/android-sdk
-        mkdir -p $ANDROID_HOME/tools/bin
-        export PATH=$ANDROID_HOME/tools/bin:$PATH
-        cd $ANDROID_HOME/tools/bin
-        yes | ../sdkmanager --sdk_root=$ANDROID_HOME --licenses
-        ../sdkmanager --sdk_root=$ANDROID_HOME 'build-tools;29.0.2'
-        ../sdkmanager --sdk_root=$ANDROID_HOME 'platform-tools'
-        ../sdkmanager --sdk_root=$ANDROID_HOME 'platforms;android-29'
-        ../sdkmanager --sdk_root=$ANDROID_HOME 'ndk;21.3.6528147'
-   
-    - name: Build APK
-      run: |
-        buildozer android debug
-        mkdir -p $GITHUB_WORKSPACE/apk
-        cp bin/*.apk $GITHUB_WORKSPACE/apk
+      - name: Download Android Command-Line Tools
+        run: |
+          mkdir -p $HOME/android-sdk/cmdline-tools/latest
+          wget https://dl.google.com/android/repository/commandlinetools-linux-11076708_latest.zip
+          unzip -o commandlinetools-linux-11076708_latest.zip -d $HOME/android-sdk/cmdline-tools/latest
+          export ANDROID_SDK_ROOT=$HOME/android-sdk
+          export PATH=$ANDROID_SDK_ROOT/cmdline-tools/latest/bin:$ANDROID_SDK_ROOT/platform-tools:$PATH
+          yes | sdkmanager --licenses
+          sdkmanager "platform-tools" "platforms;android-31" "build-tools;31.0.0"
 
-    - name: Upload APK  
-      uses: actions/upload-artifact@v3
-      with:
-        name: FlappyBird-APK
-        path: apk/
+      - name: Build APK
+        run: |
+          export ANDROID_SDK_ROOT=$HOME/android-sdk
+          export PATH=$ANDROID_SDK_ROOT/cmdline-tools/latest/bin:$ANDROID_SDK_ROOT/platform-tools:$PATH
+          buildozer android debug
+          mkdir -p $GITHUB_WORKSPACE/apk
+          cp bin/*.apk $GITHUB_WORKSPACE/apk
+
+      - name: Upload APK  
+        uses: actions/upload-artifact@v3
+        with:
+          name: FlappyBird-APK
+          path: apk/

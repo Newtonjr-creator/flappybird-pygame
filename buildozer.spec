@@ -1,19 +1,19 @@
 [app]
 
 # (str) Title of your application
-title = FlappyBird
+title = Flappy Bird
 
 # (str) Package name
 package.name = flappybird
 
 # (str) Package domain (needed for android/ios packaging)
-package.domain = org.Newtonjr-creator
+package.domain = org.test
 
 # (str) Source code where the main.py live
 source.dir = .
 
 # (list) Source files to include (let empty to include all the files)
-source.include_exts = py,png,wav
+source.include_exts = py,png,wav,kv,atlas,jpg
 
 # (list) List of inclusions using pattern matching
 #source.include_patterns = assets/*,images/*.png
@@ -29,7 +29,7 @@ source.include_exts = py,png,wav
 #source.exclude_patterns = license,images/*/*.jpg
 
 # (str) Application versioning (method 1)
-version = 0.1
+version = 1.0.0
 
 # (str) Application versioning (method 2)
 # version.regex = __version__ = ['"](.*)['"]
@@ -107,10 +107,10 @@ android.permissions = android.permission.INTERNET, (name=android.permission.WRIT
 #android.minapi = 21
 
 # (int) Android SDK version to use
-#android.sdk = 20
+android.sdk = 24
 
 # (str) Android NDK version to use
-#android.ndk = 23b
+android.ndk = 21
 
 # (int) Android NDK API to use. This is the minimum API your app will support, it should usually match android.minapi.
 #android.ndk_api = 21

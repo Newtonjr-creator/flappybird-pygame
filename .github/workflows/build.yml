@@ -1,21 +1,51 @@
 on:
- push:
-  branches: [main]
+  push:
+    branches: [main]
 
 jobs:
- build:
-  runs-on: ubuntu-22.04
-  steps:
-  - uses: actions/checkout@v4
-  - name: Build APK
-    uses: digreatbrian/buildozer-action@v2
-    with:
-     python-version: 3.8
-     buildozer-cmd: buildozer -v android debug
+  build:
+    runs-on: ubuntu-22.04
+    steps:
+    - uses: actions/checkout@v4
 
-  - name: Upload artifacts
-    uses: actions/upload-artifact@v4
-    with:
-     name: package
-     path: ./bin/*.apk
-  
+    # Clear Build Cache Step
+    - name: Clear Build Cache
+      run: |
+        rm -rf /home/runner/.buildozer
+        rm -rf ~/.gradle/caches
+        rm -rf ~/.gradle/wrapper
+
+    # Set up Java 17 for compatibility
+    - name: Set up Java 17
+      uses: actions/setup-java@v2
+      with:
+        java-version: '17'
+        distribution: 'adoptopenjdk'
+
+    # Set up Android SDK and NDK
+    - name: Set up Android SDK and NDK
+      run: |
+        export ANDROID_HOME=/usr/local/lib/android/sdk
+        export ANDROID_NDK=/usr/local/lib/android/sdk/ndk/27.2.12479018
+        export PATH=$PATH:$ANDROID_HOME/tools:$ANDROID_HOME/platform-tools
+        echo "ANDROID_HOME is set to $ANDROID_HOME"
+        echo "ANDROID_NDK is set to $ANDROID_NDK"
+
+    # Set Buildozer Log Level to 2 for more verbose logging
+    - name: Set Buildozer Log Level
+      run: |
+        sed -i 's/log_level = 1/log_level = 2/' /home/runner/work/flappybird-pygame/flappybird-pygame/buildozer.spec
+
+    # Build APK using Buildozer
+    - name: Build APK
+      uses: digreatbrian/buildozer-action@v2
+      with:
+        python-version: 3.8
+        buildozer-cmd: buildozer -v android debug
+
+    # Upload APK as an artifact
+    - name: Upload artifacts
+      uses: actions/upload-artifact@v4
+      with:
+        name: package
+        path: ./bin/*.apk

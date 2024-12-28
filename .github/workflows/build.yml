@@ -7,6 +7,10 @@ jobs:
   runs-on: ubuntu-22.04
   steps:
   - uses: actions/checkout@v4
+  - name: Install dependencies
+    run: |
+          sudo apt-get update
+          sudo apt-get install -y libpython3-dev
   - name: Build APK
     uses: digreatbrian/buildozer-action@v2
     with:

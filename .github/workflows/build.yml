@@ -25,14 +25,11 @@ jobs:
             wget \
             curl \
             git
-  - name: Install additional dependencies
-    run: |
-          sudo apt-get update
-          sudo apt-get install -y libpython3.8-dev         
+     
   - name: Build APK
     uses: digreatbrian/buildozer-action@v2
     with:
-     python-version: 3.8
+     python-version: 3
      buildozer-cmd: buildozer -v android debug
 
   - name: Upload artifacts

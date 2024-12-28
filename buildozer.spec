@@ -401,6 +401,9 @@ ios.codesign.allowed = false
 
 [buildozer]
 
+android.add_flags = -Wno-macro-redefined
+
+
 # (int) Log level (0 = error only, 1 = info, 2 = debug (with command output))
 log_level = 2
 

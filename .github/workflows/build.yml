@@ -24,12 +24,15 @@ jobs:
             libsqlite3-dev \
             wget \
             curl \
-            git
+            git \
+            python3-pip
+           pip3 install pygame
      
   - name: Build APK
     uses: digreatbrian/buildozer-action@v2
     with:
      python-version: 3.9
+     buildozer-version: 1.4.0
      buildozer-cmd: buildozer -v android debug
 
   - name: Upload artifacts

@@ -38,7 +38,7 @@ version = 0.1
 
 # (list) Application requirements
 # comma separated e.g. requirements = sqlite3,kivy
-requirements = python3,kivy,kivymd,pygame,pillow 
+requirements = python3,kivy,kivymd,pygame==2.1.2,pillow 
 
 # (str) Custom source folders for requirements
 # Sets custom source for any requirements with recipes
@@ -417,7 +417,7 @@ warn_on_root = 0
 # build_dir = ./.buildozer
 
 # (str) Path to build output (i.e. .apk, .aab, .ipa) storage
- bin_dir = ./bin
+ bin_dir = /usr/local/bin
 
 #-----------------------------------------------------------------------------
 #   Notes about using this file:

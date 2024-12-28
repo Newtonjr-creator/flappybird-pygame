@@ -1,77 +1,80 @@
-name: Build APK for flappybird 
+ name: 'Kivy App to APK'
+ description: 'Convert Kivy app to APK'
+ inputs:
+   python-version:
+     description: 'Python version to use'
+     default: '3.8'
+   work-dir:
+     default: '.'
+     description: 'Working directory'
+   buildozer-cmd:
+     default: 'buildozer android debug'
+     description: 'Buildozer command to use'
 
-on:
-  push:
-    branches:
-      - main
+# Add the branding section
+ branding:
+    color: 'green'
+    icon: 'play'
 
-jobs:
-  build:
-    runs-on: ubuntu-latest
+ runs:
+  using: "composite"
+  steps:
+    - name: Setup python
+      uses: actions/setup-python@v5
+       with:
+         architecture: x64
+         python-version: ${{ inputs.python-version }}
 
-    steps:
-    - name: Checkout the code
-      uses: actions/checkout@v2
+     - name: Setup Java 17 required by Gradle
+       uses: actions/setup-java@v4
+       with:
+         distribution: 'temurin'  # or 'zulu','liberica', etc.
+         java-version: '17'
 
-    # Install dependencies
-    - name: Install dependencies
-      run: |
-        sudo apt-get update
-        sudo apt-get install -y git python3-dev build-essential
+     - name: Set JAVA_HOME
+       run: |
+         echo "JAVA_HOME=$JAVA_HOME" >> $GITHUB_ENV
+       shell: bash
 
-    # Download Android SDK Command Line Tools
-    - name: Download Android SDK Command Line Tools
-      run: |
-        mkdir -p /home/runner/android-sdk/cmdline-tools
-        wget https://dl.google.com/android/repository/commandlinetools-linux-9477386_latest.zip -O commandlinetools.zip
-        unzip -o commandlinetools.zip -d /home/runner/android-sdk/cmdline-tools
-        rm commandlinetools.zip
-        mkdir -p /home/runner/android-sdk/cmdline-tools/latest
-        mv /home/runner/android-sdk/cmdline-tools/cmdline-tools/* /home/runner/android-sdk/cmdline-tools/latest
-        mkdir -p /home/runner/android-sdk/tools/bin
-        ln -sf /home/runner/android-sdk/cmdline-tools/latest/bin/sdkmanager /home/runner/android-sdk/tools/bin/sdkmanager
-        echo "sdkmanager path: /home/runner/android-sdk/tools/bin/sdkmanager"
+     - name: Prepare virtual environment
+       run: |
+         python3 -m venv venv
+         source venv/bin/activate
+         echo "Using Python==$(python --version)"
+       shell: bash
       
-    # Accept Android SDK Licenses
-    - name: Accept Android SDK Licenses
-      run: |
-        yes | /home/runner/android-sdk/cmdline-tools/latest/bin/sdkmanager --licenses
+     - name: Install and upgrade dependencies
+       run: |
+        sudo apt update
+        sudo apt install -y git \
+           zip \
+           unzip \
+           openjdk-17-jdk \
+           python3-pip \
+           autoconf \
+           libtool \
+           pkg-config \
+           zlib1g-dev \
+           libncurses5-dev \
+           libncursesw5-dev \
+           libtinfo5 \
+           cmake \
+           libffi-dev \
+           libssl-dev
+         export PATH=$PATH:~/.local/bin/
+         python3 -m pip install --upgrade \
+           Cython==0.29.33 \
+           buildozer
+       shell: bash
 
-    # Install Android SDK components
-    - name: Install SDK Components
-      run: |
-        /home/runner/android-sdk/cmdline-tools/latest/bin/sdkmanager "platform-tools" "platforms;android-33" "build-tools;33.0.2"
+     - name: Install requirements in requirements.txt if it exists
+       run: |
+         if [ -f requirements.txt ]; then
+           python3 -m pip install -r requirements.txt
+         fi
+       shell: bash
 
-    # Install python-for-android (p4a)
-    - name: Install python-for-android (p4a)
-      run: |
-        pip install python-for-android
-
-    # Install NDK (Optional)
-    - name: Install NDK
-      run: |
-        /home/runner/android-sdk/cmdline-tools/latest/bin/sdkmanager "ndk;25.2.9519653"
-
-    # Set up environment variables for Buildozer
-    - name: Set up environment variables
-      run: |
-        echo "ANDROID_HOME=/home/runner/android-sdk" >> $GITHUB_ENV
-        echo "ANDROID_SDK_ROOT=/home/runner/android-sdk" >> $GITHUB_ENV
-
-    # Install Buildozer and Clean Build
-    - name: Install Buildozer and Clean Build
-      run: |
-        pip install buildozer
-        buildozer android clean
-
-    # Build the APK
-    - name: Build APK
-      run: |
-        buildozer -v android debug
-
-    # Upload APK to GitHub Releases
-    - name: Upload APK to GitHub Releases
-      if: success()
-      uses: ncipollo/release-action@v1
-      with:
-        artifacts: 'bin/*.apk'
+     - name: Build with Buildozer
+       run: |
+         ${{ inputs.buildozer-cmd }}
+       shell: bash

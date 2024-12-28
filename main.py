@@ -18,28 +18,28 @@ pygame.display.set_caption("Flappy Bird")
 clock = pygame.time.Clock()
 
 # Load images
-bird_img = pygame.image.load('/storage/emulated/0/flappybird/gallery/sprites/bird.png').convert_alpha()
+bird_img = pygame.image.load('./sprites/bird.png').convert_alpha()
 bird_img = pygame.transform.scale(bird_img, (100, 100))
-background_img = pygame.image.load('/storage/emulated/0/flappybird/gallery/sprites/background.png')
+background_img = pygame.image.load('./sprites/background.png')
 background_img = pygame.transform.scale(background_img, (SCREEN_WIDTH, SCREEN_HEIGHT))
-base_img = pygame.image.load('/storage/emulated/0/flappybird/gallery/sprites/base.png').convert_alpha()
+base_img = pygame.image.load('./sprites/base.png').convert_alpha()
 base_img = pygame.transform.scale(base_img, (SCREEN_WIDTH, 150))
-pipe_img = pygame.image.load('/storage/emulated/0/flappybird/gallery/sprites/pipe.png').convert_alpha()
-heart_img = pygame.image.load('/storage/emulated/0/flappybird/gallery/sprites/heart.png').convert_alpha()
+pipe_img = pygame.image.load('./sprites/pipe.png').convert_alpha()
+heart_img = pygame.image.load('./sprites/heart.png').convert_alpha()
 heart_img = pygame.transform.scale(heart_img, (50, 50))
-message_img = pygame.image.load('/storage/emulated/0/flappybird/gallery/sprites/message.png').convert_alpha()
+message_img = pygame.image.load('./sprites/message.png').convert_alpha()
 message_img = pygame.transform.scale(message_img, (SCREEN_WIDTH, SCREEN_HEIGHT))
-game_over_img = pygame.image.load('/storage/emulated/0/flappybird/gallery/sprites/game_over.png').convert_alpha()
+game_over_img = pygame.image.load('./sprites/game_over.png').convert_alpha()
 
 # Load sound effects
-jump_sound = pygame.mixer.Sound('/storage/emulated/0/flappybird/gallery/audio/wing.wav')
-hit_sound = pygame.mixer.Sound('/storage/emulated/0/flappybird/gallery/audio/hit.wav')
-point_sound = pygame.mixer.Sound('/storage/emulated/0/flappybird/gallery/audio/point.wav')
-die_sound = pygame.mixer.Sound('/storage/emulated/0/flappybird/gallery/audio/die.wav')
-heart_sound = pygame.mixer.Sound('/storage/emulated/0/flappybird/gallery/audio/heart.wav')  # Add a sound for the heart
+jump_sound = pygame.mixer.Sound('./audio/wing.wav')
+hit_sound = pygame.mixer.Sound('./audio/hit.wav')
+point_sound = pygame.mixer.Sound('./audio/point.wav')
+die_sound = pygame.mixer.Sound('./audio/die.wav')
+heart_sound = pygame.mixer.Sound('./audio/heart.wav')  # Add a sound for the heart
 
 # Load number sprites for the score
-numbers = [pygame.image.load(f'/storage/emulated/0/flappybird/gallery/sprites/{i}.png').convert_alpha() for i in range(10)]
+numbers = [pygame.image.load(f'./sprites/{i}.png').convert_alpha() for i in range(10)]
 # Scale the numbers to make them smaller and uniform in size
 numbers = [pygame.transform.scale(num, (30, 50)) for num in numbers]  # Resize each number to 30x50
 

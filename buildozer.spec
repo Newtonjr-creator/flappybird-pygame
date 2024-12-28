@@ -13,7 +13,7 @@ package.domain = org.Newtonjr-creator
 source.dir = .
 
 # (list) Source files to include (let empty to include all the files)
-source.include_exts = py,png,jpg,kv,atlas,ttf,wav
+source.include_exts = py,png,wav
 
 # (list) List of inclusions using pattern matching
 #source.include_patterns = assets/*,images/*.png
@@ -405,7 +405,7 @@ ios.codesign.allowed = false
 log_level = 2
 
 # (int) Display warning if buildozer is run as root (0 = False, 1 = True)
-warn_on_root = 1
+warn_on_root = 0
 
 # (str) Path to build artifact storage, absolute or relative to spec file
 # build_dir = ./.buildozer

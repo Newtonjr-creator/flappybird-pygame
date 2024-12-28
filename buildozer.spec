@@ -122,10 +122,10 @@ android.permissions = android.permission.READ_EXTERNAL_STORAGE, android.permissi
 # (str) Android NDK directory (if empty, it will be automatically downloaded.)
 
 
-android.sdk_path = /usr/local/lib/android/sdk
-android.ndk_path = /usr/local/lib/android/sdk/ndk/27.2.12479018
-android.api = 31
-android.minapi = 21
+#android.sdk_path = /usr/local/lib/android/sdk
+#android.ndk_path = /usr/local/lib/android/sdk/ndk/27.2.12479018
+#android.api = 31
+#android.minapi = 21
 
 
 # (str) ANT directory (if empty, it will be automatically downloaded.)

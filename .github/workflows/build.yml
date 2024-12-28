@@ -32,7 +32,6 @@ jobs:
     uses: digreatbrian/buildozer-action@v2
     with:
      python-version: 3.9
-     buildozer-version: 1.4.0
      buildozer-cmd: buildozer -v android debug
 
   - name: Upload artifacts

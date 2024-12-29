@@ -1,4 +1,4 @@
-
+  
 on:
  push:
   branches: [main]
@@ -12,6 +12,7 @@ jobs:
   - name: Set up Android SDK
     run: |
       echo "ANDROID_SDK_ROOT=/usr/local/lib/android/sdk" >> $GITHUB_ENV
+      yes | sdkmanager --install "build-tools;30.0.3" "platforms;android-30"
 
   - name: Install dependencies
     run: |
@@ -44,4 +45,4 @@ jobs:
     uses: actions/upload-artifact@v4
     with:
      name: package
-     path: ./bin/*.apk  
+     path: ./bin/*.apk

@@ -101,7 +101,7 @@ android.permissions = INTERNET, WRITE_EXTERNAL_STORAGE:maxSdkVersion=18
 #android.features = android.hardware.usb.host
 
 # (int) Target Android API, should be as high as possible.
-android.api = 31
+android.api = 33
 
 # (int) Minimum API your APK / AAB will support.
 android.minapi = 21
@@ -119,10 +119,10 @@ android.ndk_api = 21
 #android.private_storage = True
 
 # (str) Android NDK directory (if empty, it will be automatically downloaded.)
-android.ndk_path = $ANDROID_NDK_ROOT
+android.ndk_path = /usr/local/lib/android/sdk/ndk/27.2.12479018
 
 # (str) Android SDK directory (if empty, it will be automatically downloaded.)
-android.sdk_path = $ANDROID_SDK_ROOT
+android.sdk_path = /usr/local/lib/android/sdk
 
 # (str) ANT directory (if empty, it will be automatically downloaded.)
 #android.ant_path =

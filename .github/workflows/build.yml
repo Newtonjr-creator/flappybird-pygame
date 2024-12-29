@@ -1,4 +1,4 @@
-  
+
 on:
  push:
   branches: [main]
@@ -9,10 +9,19 @@ jobs:
   steps:
   - uses: actions/checkout@v4
 
+  - name: Install Android SDK command-line tools
+    run: |
+      sudo apt-get update
+      sudo apt-get install -y wget unzip
+      wget https://dl.google.com/android/repository/commandlinetools-linux-7583922_latest.zip -O cmdline-tools.zip
+      mkdir -p /usr/local/lib/android/sdk/cmdline-tools
+      unzip cmdline-tools.zip -d /usr/local/lib/android/sdk/cmdline-tools
+      mv /usr/local/lib/android/sdk/cmdline-tools/cmdline-tools /usr/local/lib/android/sdk/cmdline-tools/latest
+
   - name: Set up Android SDK
     run: |
       echo "ANDROID_SDK_ROOT=/usr/local/lib/android/sdk" >> $GITHUB_ENV
-      yes | sdkmanager --install "build-tools;30.0.3" "platforms;android-30"
+      yes | /usr/local/lib/android/sdk/cmdline-tools/latest/bin/sdkmanager --install "build-tools;30.0.3" "platforms;android-30"
 
   - name: Install dependencies
     run: |

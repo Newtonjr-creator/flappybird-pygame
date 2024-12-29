@@ -19,10 +19,10 @@ jobs:
       with:
         python-version: 3.9
 
-    - name: Install Buildozer
+    - name: Install Buildozer and Cython
       run: |
         pip install --upgrade pip setuptools
-        pip install buildozer
+        pip install buildozer cython
 
     - name: Install Android SDK and NDK
       run: |

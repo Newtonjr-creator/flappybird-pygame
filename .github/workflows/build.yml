@@ -28,20 +28,30 @@ jobs:
           wget \
           curl \
           git \
-          python3-pip
+          python3-pip \
+          unzip
+
+    - name: Install Android SDK and NDK
+      run: |
+        # Install Android SDK
+        mkdir -p $HOME/android-sdk
+        cd $HOME/android-sdk
+        wget https://dl.google.com/android/repository/commandlinetools-linux-8512546_latest.zip
+        unzip commandlinetools-linux-8512546_latest.zip
+        rm commandlinetools-linux-8512546_latest.zip
+        yes | ./cmdline-tools/bin/sdkmanager --sdk_root=$HOME/android-sdk --licenses
+        ./cmdline-tools/bin/sdkmanager --sdk_root=$HOME/android-sdk "platform-tools" "build-tools;33.0.0" "platforms;android-33" "ndk;21.4.7075529"
+        
+        # Set environment variables
+        echo "ANDROID_SDK_ROOT=$HOME/android-sdk" >> $GITHUB_ENV
+        echo "ANDROID_NDK_HOME=$HOME/android-sdk/ndk/21.4.7075529" >> $GITHUB_ENV
+        echo "ANDROID_HOME=$HOME/android-sdk" >> $GITHUB_ENV
+        echo "PATH=$PATH:$HOME/android-sdk/platform-tools:$HOME/android-sdk/tools:$HOME/android-sdk/tools/bin" >> $GITHUB_ENV
 
     - name: Install Python dependencies
       run: |
         pip3 install --upgrade pip
         pip3 install buildozer cython pygame
-
-    - name: Set environment variables for SDK/NDK
-      run: |
-        echo "ANDROIDSDK=/usr/local/lib/android/sdk" >> $GITHUB_ENV
-        echo "ANDROIDNDK=/usr/local/lib/android/sdk/ndk/21.4.7075529" >> $GITHUB_ENV
-        echo "ANDROIDAPI=33" >> $GITHUB_ENV
-        echo "ANDROIDMINAPI=21" >> $GITHUB_ENV
-        echo "PATH=$PATH:/usr/local/lib/android/sdk/platform-tools:/usr/local/lib/android/sdk/tools:/usr/local/lib/android/sdk/tools/bin" >> $GITHUB_ENV
 
     - name: Build APK
       uses: digreatbrian/buildozer-action@v2
@@ -49,7 +59,7 @@ jobs:
         python-version: 3.9
         buildozer-cmd: android debug
 
-    - name: Upload artifacts
+    - name: Upload APK artifact
       uses: actions/upload-artifact@v4
       with:
         name: flappybird-debug-apk

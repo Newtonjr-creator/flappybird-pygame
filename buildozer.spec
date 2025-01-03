@@ -100,11 +100,16 @@ fullscreen = 1
 # (list) features (adds uses-feature -tags to manifest)
 #android.features = android.hardware.usb.host
 
-# (int) Target Android API, should be as high as possible.
+# Android settings
+android.sdk_path = /usr/local/lib/android/sdk
+android.ndk_path = /usr/local/lib/android/sdk/ndk
 android.api = 33
+android.minapi = 21
+# (int) Target Android API, should be as high as possible.
+#android.api = 33
 
 # (int) Minimum API your APK / AAB will support.
-android.minapi = 21
+#android.minapi = 21
 
 # (int) Android SDK version to use
 #android.sdk = 31

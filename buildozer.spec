@@ -119,10 +119,10 @@ android.minapi = 21
 #android.private_storage = True
 
 # (str) Android NDK directory (if empty, it will be automatically downloaded.)
-android.ndk_path = /root/android-sdk/ndk
+#android.ndk_path = /root/android-sdk/ndk
 
 # (str) Android SDK directory (if empty, it will be automatically downloaded.)
-android.sdk_path = /root/android-sdk
+#android.sdk_path = /root/android-sdk
 
 # (str) ANT directory (if empty, it will be automatically downloaded.)
 #android.ant_path =
@@ -353,7 +353,7 @@ android.debug_artifact = apk
 
 
 
-p4a.local_ndk = /root/android-sdk/ndk
+#p4a.local_ndk = /root/android-sdk/ndk
 # iOS specific
 #
 

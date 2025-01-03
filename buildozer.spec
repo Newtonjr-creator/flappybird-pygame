@@ -101,10 +101,10 @@ fullscreen = 1
 #android.features = android.hardware.usb.host
 
 # Android settings
-android.sdk_path = /usr/local/lib/android/sdk
-android.ndk_path = /usr/local/lib/android/sdk/ndk
-android.api = 33
-android.minapi = 21
+#android.sdk_path = /usr/local/lib/android/sdk
+#android.ndk_path = /usr/local/lib/android/sdk/ndk
+#android.api = 33
+#android.minapi = 21
 # (int) Target Android API, should be as high as possible.
 #android.api = 33
 

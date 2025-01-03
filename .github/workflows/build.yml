@@ -17,8 +17,7 @@ jobs:
           python3-dev \
           build-essential \
           libpython3-dev \
-          libncurses5-dev \
-          libncursesw5-dev \
+          libncursesw6-dev \
           libreadline-dev \
           libssl-dev \
           libffi-dev \

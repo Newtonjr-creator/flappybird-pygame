@@ -35,18 +35,18 @@ jobs:
         pip3 install --upgrade pip
         pip3 install buildozer cython pygame
 
-    - name: Set environment variables
+    - name: Set environment variables for SDK/NDK
       run: |
-        echo "ANDROIDSDK=/root/android-sdk" >> $GITHUB_ENV
-        echo "ANDROIDNDK=/root/android-sdk/ndk/android-ndk-r25.2.9519653" >> $GITHUB_ENV
+        echo "ANDROIDSDK=/usr/local/lib/android/sdk" >> $GITHUB_ENV
+        echo "ANDROIDNDK=/usr/local/lib/android/sdk/ndk/21.4.7075529" >> $GITHUB_ENV
         echo "ANDROIDAPI=33" >> $GITHUB_ENV
         echo "ANDROIDMINAPI=21" >> $GITHUB_ENV
+        echo "PATH=$PATH:/usr/local/lib/android/sdk/platform-tools:/usr/local/lib/android/sdk/tools:/usr/local/lib/android/sdk/tools/bin" >> $GITHUB_ENV
 
     - name: Build APK
       uses: digreatbrian/buildozer-action@v2
       with:
         python-version: 3.9
-        buildozer-version: 1.4.0
         buildozer-cmd: android debug
 
     - name: Upload artifacts
